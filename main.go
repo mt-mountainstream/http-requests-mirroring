@@ -130,7 +130,7 @@ func forwardRequest(req *http.Request, reqSourceIP string, reqDestionationPort s
 
 	// check whitelist RequestURI.
 	log.Println("request uri", ":", req.RequestURI)
-	if len(fwdUriWhitelist) > 0 && !slices.Contains(fwdUriWhitelist, strings.Split(req.RequestURI, "?")[0]) {
+	if len(fwdUriWhitelist) > 0 && !slices.Contains([]string(fwdUriWhitelist), strings.Split(req.RequestURI, "?")[0]) {
 		log.Println("Block request uri", ":", req.RequestURI)
 		return
 	}
