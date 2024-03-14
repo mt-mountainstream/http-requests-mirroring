@@ -17,7 +17,6 @@ import (
 	"flag"
 	"fmt"
 	"strings"
-	"golang.org/x/exp/slices"
 	"hash/crc64"
 	"io"
 	"io/ioutil"
@@ -130,7 +129,7 @@ func forwardRequest(req *http.Request, reqSourceIP string, reqDestionationPort s
 
 	// check whitelist RequestURI.
 	log.Println("request uri", ":", req.RequestURI)
-	if len(fwdUriWhitelist) > 0 && !slices.Contains(fwdUriWhitelist, strings.Split(req.RequestURI, "?")[0]) {
+	if len(fwdUriWhitelist) > 0 && !containsStr(fwdUriWhitelist, strings.Split(req.RequestURI, "?")[0]) {
 		log.Println("Block request uri", ":", req.RequestURI)
 		return
 	}
@@ -179,6 +178,15 @@ func forwardRequest(req *http.Request, reqSourceIP string, reqDestionationPort s
 	}
 
 	defer resp.Body.Close()
+}
+
+func containsStr(slice []string, key string) bool {
+	for _, s := range slice {
+		if s == key {
+			return true
+		}
+	}
+	return false
 }
 
 // Listen for incoming connections.
