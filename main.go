@@ -243,7 +243,7 @@ func main() {
 	ticker := time.Tick(time.Minute)
 
 	log.Println("setup fwdUriWhitelist")
-	fwdUriWhitelist = strings.Split(fwdUriWhitelistStr, ",")
+	fwdUriWhitelist = strings.Split(string(*fwdUriWhitelistStr), ",")
 	if len(fwdUriWhitelist) == 1 && fwdUriWhitelist[0] == "" {
 		fwdUriWhitelist = []string(nil)
 	}
