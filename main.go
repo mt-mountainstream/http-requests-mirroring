@@ -16,6 +16,8 @@ import (
 	"encoding/binary"
 	"flag"
 	"fmt"
+	"strings"
+	"golang.org/x/exp/slices"
 	"hash/crc64"
 	"io"
 	"io/ioutil"
@@ -35,6 +37,10 @@ import (
 )
 
 var fwdDestination = flag.String("destination", "", "Destination of the forwarded requests.")
+var fwdUriWhitelist = strings.Split(flag.String("uri-whitelist", "", "Define comma-separated URIs that allow forwarding. If none exists, all are permitted."), ",")
+if len(fwdUriWhitelist) == 1 && fwdUriWhitelist[0] == "" {
+	fwdUriWhitelist = []string(nil)
+}
 var fwdPerc = flag.Float64("percentage", 100, "Must be between 0 and 100.")
 var fwdBy = flag.String("percentage-by", "", "Can be empty. Otherwise, valid values are: header, remoteaddr.")
 var fwdHeader = flag.String("percentage-by-header", "", "If percentage-by is header, then specify the header here.")
@@ -122,6 +128,13 @@ func forwardRequest(req *http.Request, reqSourceIP string, reqDestionationPort s
 		if randomPercent > *fwdPerc {
 			return
 		}
+	}
+
+	// check whitelist RequestURI.
+	log.Println("request uri", ":", req.RequestURI)
+	if len(fwdUriWhitelist) > 0 && !slices.Contains(fwdUriWhitelist, strings.Split(req.RequestURI, "?")[0]) {
+		log.Println("Block request uri", ":", req.RequestURI)
+		return
 	}
 
 	// create a new url from the raw RequestURI sent by the client
