@@ -130,10 +130,10 @@ func forwardRequest(req *http.Request, reqSourceIP string, reqDestionationPort s
 	// check whitelist RequestURI.
 
 	if len(fwdUriWhitelist) > 0 && !prefixContainsStr(fwdUriWhitelist, strings.Split(req.RequestURI, "?")[0]) {
-		log.Println("Block request uri", ":", req.RequestURI)
+		// log.Println("Block request uri", ":", req.RequestURI)
 		return
 	}
-	log.Println("Duplicate request uri", ":", req.RequestURI)
+	// log.Println("Duplicate request uri", ":", req.RequestURI)
 
 	// create a new url from the raw RequestURI sent by the client
 	url := fmt.Sprintf("%s%s", string(*fwdDestination), req.RequestURI)
