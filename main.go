@@ -37,7 +37,8 @@ import (
 )
 
 var fwdDestination = flag.String("destination", "", "Destination of the forwarded requests.")
-var fwdUriWhitelist = strings.Split(flag.String("uri-whitelist", "", "Define comma-separated URIs that allow forwarding. If none exists, all are permitted."), ",")
+var fwdUriWhitelistStr = flag.String("uri-whitelist", "", "Define comma-separated URIs that allow forwarding. If none exists, all are permitted.")
+var fwdUriWhitelist []string
 var fwdPerc = flag.Float64("percentage", 100, "Must be between 0 and 100.")
 var fwdBy = flag.String("percentage-by", "", "Can be empty. Otherwise, valid values are: header, remoteaddr.")
 var fwdHeader = flag.String("percentage-by-header", "", "If percentage-by is header, then specify the header here.")
@@ -242,6 +243,7 @@ func main() {
 	ticker := time.Tick(time.Minute)
 
 	log.Println("setup fwdUriWhitelist")
+	fwdUriWhitelist = strings.Split(fwdUriWhitelistStr, ",")
 	if len(fwdUriWhitelist) == 1 && fwdUriWhitelist[0] == "" {
 		fwdUriWhitelist = []string(nil)
 	}
