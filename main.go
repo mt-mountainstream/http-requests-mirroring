@@ -255,6 +255,11 @@ func main() {
 	if len(fwdUriWhitelist) == 1 && fwdUriWhitelist[0] == "" {
 		fwdUriWhitelist = []string(nil)
 	}
+	if len(fwdUriWhitelist) == 0 {
+		log.Println("fwdUriWhitelist", ":", "ALL")
+	} else {
+		log.Println("fwdUriWhitelist", ":", fwdUriWhitelist)
+	}
 
 	//Open a TCP Client, for NLB Health Checks only
 	go openTCPClient()
